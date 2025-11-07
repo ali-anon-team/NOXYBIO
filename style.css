@@ -166,6 +166,392 @@ section:nth-child(n + 2) {
   }
 }
 
+/* Adding advanced animation effects from provided CSS sets */
+
+/* ============ ANIMATION SET 1: INTERACTIVE HOVER EFFECTS ============ */
+
+/* Breath animation for text elements */
+*[letter-animation="breath"] {
+  & > span {
+    display: inline-block;
+    white-space: break-spaces;
+  }
+
+  & > span {
+    animation: breath calc(var(--speed, 1200ms)) ease calc(var(--index, 0) * 100 * 1ms) infinite alternate;
+  }
+}
+
+@keyframes breath {
+  from {
+    animation-timing-function: ease-out;
+  }
+  to {
+    transform: scale(1.25) translateY(-5px) perspective(1px);
+    text-shadow: 0 0 20px rgba(183, 75, 75, 0.8);
+    animation-timing-function: ease-in-out;
+  }
+}
+
+/* ============ ANIMATION SET 2: CHARACTER ANIMATIONS ============ */
+
+/* Animation One - Revolve & Scale */
+.animate-one span {
+  color: #24a8e6;
+  opacity: 0;
+  transform: translate(-150px, -50px) rotate(-180deg) scale(3);
+  animation: revolveScale 0.4s forwards;
+}
+
+@keyframes revolveScale {
+  60% {
+    transform: translate(20px, 20px) rotate(30deg) scale(0.3);
+  }
+  100% {
+    transform: translate(0) rotate(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animation Two - Ball Drop */
+.animate-two span {
+  color: #a5cb21;
+  opacity: 0;
+  transform: translate(200px, -100px) scale(2);
+  animation: ballDrop 0.3s forwards;
+}
+
+@keyframes ballDrop {
+  60% {
+    transform: translate(0, 20px) rotate(-180deg) scale(0.5);
+  }
+  100% {
+    transform: translate(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animation Three - Side Slide */
+.animate-three span {
+  color: #b10e81;
+  opacity: 0;
+  transform: translate(-300px, 0) scale(0);
+  animation: sideSlide 0.5s forwards;
+}
+
+@keyframes sideSlide {
+  60% {
+    transform: translate(20px, 0) scale(1);
+    color: #b10e81;
+  }
+  80% {
+    transform: translate(20px, 0) scale(1);
+    color: #b10e81;
+  }
+  99% {
+    transform: translate(0) scale(1.2);
+    color: #00f0ff;
+  }
+  100% {
+    transform: translate(0) scale(1);
+    opacity: 1;
+    color: #b10e81;
+  }
+}
+
+/* Animation Four - Revolve Drop */
+.animate-four span {
+  color: #8d6a00;
+  opacity: 0;
+  transform: translate(0, -100px) rotate(360deg) scale(0);
+  animation: revolveDrop 0.3s forwards;
+}
+
+@keyframes revolveDrop {
+  30% {
+    transform: translate(0, -50px) rotate(180deg) scale(1);
+  }
+  60% {
+    transform: translate(0, 20px) scale(0.8) rotate(0deg);
+  }
+  100% {
+    transform: translate(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Animation Five - Drop Vanish */
+.animate-five span {
+  color: #dd3f0f;
+  opacity: 0;
+  transform: translate(0, -100px) rotate(360deg) scale(0);
+  animation: dropVanish 0.5s forwards;
+}
+
+@keyframes dropVanish {
+  30% {
+    transform: translate(0, -50px) rotate(180deg) scale(1);
+  }
+  50% {
+    transform: translate(0, 20px) scale(0.8) rotate(0deg);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(-100px, -100px) scale(1.5) rotate(-180deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Animation Six - Twister */
+.animate-six span {
+  color: #ddb40f;
+  opacity: 0;
+  transform: rotate(-180deg) translate(150px, 0);
+  animation: twister 0.5s forwards;
+}
+
+@keyframes twister {
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(0deg) translate(0);
+    opacity: 1;
+  }
+}
+
+/* Animation Seven - Left Right */
+.animate-seven span {
+  color: #348c04;
+  opacity: 0;
+  transform: translate(-150px, 0) scale(0.3);
+  animation: leftRight 0.5s forwards;
+}
+
+@keyframes leftRight {
+  40% {
+    transform: translate(50px, 0) scale(0.7);
+    opacity: 1;
+    color: #348c04;
+  }
+  60% {
+    color: #0f40ba;
+  }
+  80% {
+    transform: translate(0) scale(2);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============ CUSTOM GLIDE TO REVEAL ANIMATION ============ */
+/* Smooth reveal effect with directional glide */
+
+.glide-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.glide-reveal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(183, 75, 75, 0.3) 50%, transparent 100%);
+  animation: glideLeft 1.2s ease-in-out forwards;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes glideLeft {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Alternate glide direction */
+.glide-reveal.from-right::before {
+  left: 100%;
+  animation: glideRight 1.2s ease-in-out forwards;
+}
+
+@keyframes glideRight {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: -100%;
+  }
+}
+
+/* Apply glide reveal with fade for smooth effect */
+.glide-reveal.fade-in {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.glide-reveal.fade-in::before {
+  animation: glideLeft 1.2s ease-in-out 0.4s forwards;
+}
+
+/* Staggered animation delays for multiple glide elements */
+.glide-reveal:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.glide-reveal:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.glide-reveal:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.glide-reveal:nth-child(4) {
+  animation-delay: 0.45s;
+}
+
+.glide-reveal:nth-child(n + 5) {
+  animation-delay: calc(0.3s * (var(--reveal-index, 0)));
+}
+
+/* Mobile optimization for smooth animations */
+@media (max-width: 768px) {
+  .glide-reveal::before {
+    animation: glideLeft 0.9s ease-in-out forwards;
+  }
+
+  .glide-reveal.from-right::before {
+    animation: glideRight 0.9s ease-in-out forwards;
+  }
+
+  /* Faster animation delays on mobile */
+  .animate-one span,
+  .animate-two span,
+  .animate-three span,
+  .animate-four span,
+  .animate-five span,
+  .animate-six span,
+  .animate-seven span {
+    animation-duration: 0.35s !important;
+  }
+
+  /* Reduced animation for better performance on mobile */
+  *[letter-animation="breath"] > span {
+    animation: breath calc(var(--speed, 800ms)) ease calc(var(--index, 0) * 60 * 1ms) infinite alternate;
+  }
+}
+
+/* Ultra-smooth performance with GPU acceleration */
+.glide-reveal,
+.animate-one span,
+.animate-two span,
+.animate-three span,
+.animate-four span,
+.animate-five span,
+.animate-six span,
+.animate-seven span {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Added scroll-triggered animation system for professional reveal effects */
+
+/* Scroll visibility class that triggers animations */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: opacity, transform;
+}
+
+.scroll-animate.scroll-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered scroll animations for cards and items */
+.services-grid .scroll-animate {
+  transition-delay: calc(var(--scroll-index, 0) * 0.1s);
+}
+
+.skills-container .scroll-animate {
+  transition-delay: calc(var(--scroll-index, 0) * 0.1s);
+}
+
+.contact-item.scroll-animate {
+  transition-delay: calc(var(--scroll-index, 0) * 0.1s);
+}
+
+/* Smooth bounce effect for sections on scroll reveal */
+@keyframes scrollBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced visual effect: slight scale up when revealed */
+.scroll-animate.scroll-visible {
+  animation: scrollReveal 0.6s ease-out forwards;
+}
+
+@keyframes scrollReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Optimize scroll animations for mobile devices */
+@media (max-width: 768px) {
+  .scroll-animate {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-animate.scroll-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Faster stagger on mobile for snappier feel */
+  .services-grid .scroll-animate,
+  .skills-container .scroll-animate,
+  .contact-item.scroll-animate {
+    transition-delay: calc(var(--scroll-index, 0) * 0.05s);
+  }
+}
+
+/* GPU acceleration for ultra-smooth performance */
+.scroll-animate {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
 .home {
   display: flex;
   justify-content: center;
@@ -358,7 +744,6 @@ span {
   padding: 2rem;
   text-align: center;
   transition: 0.3s ease;
-  cursor: pointer;
   opacity: 0;
   animation: fadeInUp 0.6s ease-out forwards;
 }
