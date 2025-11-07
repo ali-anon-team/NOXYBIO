@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <title>Noxy Portfolio</title>
+
+  <!-- Minimal styles for the audio control -->
+  <style>
+    /* audio control container */
+    .noxy-audio-control {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      background: rgba(0,0,0,0.65);
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 28px;
+      cursor: pointer;
+      font-family: inherit;
+      z-index: 9999;
+      backdrop-filter: blur(4px);
+    }
+    .noxy-audio-control:focus { outline: 2px solid #88f; }
+    .noxy-audio-control i { font-size: 18px; }
+    .noxy-audio-text { font-size: 14px; white-space: nowrap; }
+    .noxy-audio-text.active { opacity: .95; transform: translateY(-2px); transition: .2s; }
+
+    /* small unmute banner when autoplay blocked */
+    .noxy-unmute-banner {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.95);
+      color: #111;
+      padding: 10px 14px;
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      z-index: 9999;
+      display: none; /* shown only when needed */
+      align-items: center;
+      gap: 10px;
+      font-family: inherit;
+    }
+    .noxy-unmute-banner button {
+      background: #111;
+      color: #fff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .noxy-unmute-banner .info { font-size: 13px; }
+
+    /* responsive tweaks */
+    @media (max-width:480px){
+      .noxy-audio-text { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">N0XY</a>
+    <nav>
+      <a href="#" class="active"> Home</a>
+      <a href="#" >Services</a>
+      <a href="#" >Skills</a>
+      <a href="#" >Education</a>
+      <a href="#" >Experience</a>
+      <a href="#" >Contact</a>
+    </nav>
+  </header>
+
+  <section class="home">
+    <div class="home-img">
+      <img src="main.jpg" alt="">
+    </div>
+    <div class="home-content">
+      <h1>Hi, It's <span>Ibrahim</span></h1>
+      <h3 class="typing-text">I'm a <span></span></h3>
+      <p> I used to make website, many kind of scripts and other technical things. Now i'm focusing on red teaming and I want to involve myself in offensive security. I'm studing into this field almost 4 years spring</p>
+      <div class="social-icons">
+        <a href="https://github.com/ali-anon-team" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://instagram.com/n0.x.y" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://facebook.com/ali.blackhat.hacker" target="_blank"><i class="fab fa-facebook"></i></a>
+      </div>
+      <a href="#" class="btn">Hire me</a>
+    </div>
+  </section>
+
+ 
+  <audio id="bgMusic" loop preload="auto">
+    <source src="video 6.mp3" type="audio/mpeg" />
+    Your browser doesn't support audio.
+  </audio>
+
+  <!-- Floating audio control -->
+  <button id="audioControl" class="noxy-audio-control" aria-pressed="false" aria-label="Toggle background music">
+    <span id="audioIcon"><i class="fas fa-volume-mute" aria-hidden="true"></i></span>
+    <span id="audioText" class="noxy-audio-text">Tap to play music</span>
+  </button>
+
+  <!-- Unmute banner shown if autoplay blocked (appears top-right) -->
+  <div id="unmuteBanner" class="noxy-unmute-banner" role="dialog" aria-live="polite">
+    <div class="info">Sound is paused by your browser. Click to enable audio.</div>
+    <button id="unmuteBtn" title="Unmute">Unmute</button>
+  </div>
+
+  <!-- Script: attempts autoplay; falls back to muted autoplay + unmute prompt -->
+  <script>
+  (function () {
+    const audio = document.getElementById('bgMusic');
+    const control = document.getElementById('audioControl');
+    const icon = document.getElementById('audioIcon');
+    const text = document.getElementById('audioText');
+    const banner = document.getElementById('unmuteBanner');
+    const unmuteBtn = document.getElementById('unmuteBtn');
+
+    let isPlaying = false;
+    let isMuted = false;
+
+    // Helper to update UI
+    function updateUI() {
+      control.setAttribute('aria-pressed', String(isPlaying));
+      if (isPlaying && !isMuted) {
+        icon.innerHTML = '<i class="fas fa-volume-up" aria-hidden="true"></i>';
+        text.textContent = 'Music On';
+      } else if (isPlaying && isMuted) {
+        icon.innerHTML = '<i class="fas fa-volume-off" aria-hidden="true"></i>';
+        text.textContent = 'Muted';
+      } else {
+        icon.innerHTML = '<i class="fas fa-volume-mute" aria-hidden="true"></i>';
+        text.textContent = 'Tap to play music';
+      }
+    }
+
+    // Try to play unmuted; if blocked, try muted autoplay as fallback.
+    async function attemptAutoplay() {
+      try {
+        // Preferred: try to play unmuted
+        audio.muted = false;
+        isMuted = false;
+        await audio.play();
+        isPlaying = true;
+        updateUI();
+        // Hide banner if visible
+        banner.style.display = 'none';
+        return;
+      } catch (err) {
+        // unmuted autoplay failed -> try muted autoplay (allowed by browsers)
+        try {
+          audio.muted = true;
+          isMuted = true;
+          await audio.play();
+          isPlaying = true;
+          updateUI();
+          // Show banner prompting user to unmute
+          banner.style.display = 'flex';
+        } catch (err2) {
+          // playback failed entirely (very rare) - show control so user can start
+          isPlaying = false;
+          updateUI();
+          banner.style.display = 'flex';
+          console.warn('Both unmuted and muted autoplay attempts failed:', err2);
+        }
+      }
+    }
+
+    // Toggle play/pause — user interaction ensures playback is allowed
+    async function togglePlayPause() {
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        updateUI();
+      } else {
+        try {
+          await audio.play();
+          isPlaying = true;
+          // if it was muted due to fallback, keep muted status as-is
+          isMuted = audio.muted;
+          updateUI();
+        } catch (err) {
+          console.warn('Play failed on toggle:', err);
+          // show banner to ask for user permission
+          banner.style.display = 'flex';
+        }
+      }
+    }
+
+    // Unmute handler — runs on user gesture (allowed)
+    async function unmuteAndEnableSound() {
+      try {
+        audio.muted = false;
+        isMuted = false;
+        // If audio was paused due to policy, try to play
+        if (!isPlaying) {
+          await audio.play();
+          isPlaying = true;
+        }
+        updateUI();
+        banner.style.display = 'none';
+      } catch (err) {
+        console.warn('Unmute/play failed:', err);
+      }
+    }
+
+    // Hook control click
+    control.addEventListener('click', async (e) => {
+      // user gesture
+      if (!isPlaying && audio.muted) {
+        // if currently muted and not playing, unmute then play
+        await unmuteAndEnableSound();
+      } else {
+        await togglePlayPause();
+      }
+    });
+
+    // Hook unmute banner button
+    unmuteBtn.addEventListener('click', async () => {
+      await unmuteAndEnableSound();
+    });
+
+    // Expose small API for other scripts
+    window.noxyAudio = {
+      play: async () => { try { await audio.play(); isPlaying = true; updateUI(); return true; } catch(e){ return false; } },
+      pause: () => { audio.pause(); isPlaying = false; updateUI(); },
+      toggle: togglePlayPause,
+      isPlaying: () => isPlaying,
+      isMuted: () => audio.muted,
+      element: audio
+    };
+
+    // Attempt autoplay once DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      attemptAutoplay();
+      updateUI();
+    });
+
+    // Keep UI state in sync with native events
+    audio.addEventListener('play', () => { isPlaying = true; updateUI(); });
+    audio.addEventListener('pause', () => { isPlaying = false; updateUI(); });
+    audio.addEventListener('volumechange', () => { isMuted = audio.muted; updateUI(); });
+  })();
+  </script>
+</body>
+</html>
